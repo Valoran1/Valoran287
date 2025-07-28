@@ -1,52 +1,49 @@
-const form = document.getElementById("chat-form");
-const input = document.getElementById("user-input");
-const chatLog = document.getElementById("chat-log");
+const chatLog = document.getElementById('chat-log');
+const chatForm = document.getElementById('chat-form');
+const userInput = document.getElementById('user-input');
 
-form.addEventListener("submit", async (e) => {
+chatForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const message = input.value.trim();
-  if (!message) return;
+  const input = userInput.value.trim();
+  if (!input) return;
 
-  appendMessage("user", message);
-  input.value = "";
-
-  const response = await fetch("/.netlify/functions/chat", {
-    method: "POST",
-    body: JSON.stringify({ message }),
-  });
-
-  if (!response.ok) {
-    appendMessage("bot", "Napaka pri pošiljanju sporočila.");
-    return;
-  }
-
-  const reader = response.body.getReader();
-  let botMessage = "";
-  appendMessage("bot", ""); // create empty message
-
-  const typewriter = document.querySelector(".chat-message.bot:last-child");
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    const chunk = new TextDecoder().decode(value);
-    botMessage += chunk;
-    typewriter.textContent = botMessage;
-  }
+  appendMessage('user', input);
+  userInput.value = '';
+  const botMessage = await fetchResponse(input);
+  await typeMessage('bot', botMessage);
 });
 
-function appendMessage(role, text) {
-  const div = document.createElement("div");
-  div.className = `chat-message ${role}`;
-  div.textContent = text;
-  chatLog.appendChild(div);
+function appendMessage(role, content) {
+  const messageEl = document.createElement('div');
+  messageEl.classList.add('chat-message', role);
+  messageEl.textContent = content;
+  chatLog.appendChild(messageEl);
   chatLog.scrollTop = chatLog.scrollHeight;
 }
 
-input.addEventListener("keydown", function (e) {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    form.dispatchEvent(new Event("submit"));
+async function typeMessage(role, message) {
+  const messageEl = document.createElement('div');
+  messageEl.classList.add('chat-message', role);
+  chatLog.appendChild(messageEl);
+  for (let i = 0; i < message.length; i++) {
+    messageEl.textContent += message[i];
+    chatLog.scrollTop = chatLog.scrollHeight;
+    await new Promise((r) => setTimeout(r, 15));
   }
-});
+}
+
+async function fetchResponse(userMessage) {
+  try {
+    const response = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: userMessage }),
+    });
+    const data = await response.json();
+    return data.reply || "Nimam odgovora.";
+  } catch (err) {
+    return "Napaka pri povezavi z Valoranom.";
+  }
+}
+
 
