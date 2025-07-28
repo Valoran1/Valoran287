@@ -2,7 +2,7 @@ const chatLog = document.getElementById('chat-log');
 const chatForm = document.getElementById('chat-form');
 const userInput = document.getElementById('user-input');
 
-// Pošlji s klikom ali Enter (brez Shift)
+// Enter = submit, Shift+Enter = nova vrstica
 chatForm.addEventListener('submit', handleSubmit);
 userInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
@@ -43,19 +43,7 @@ async function typeMessage(role, message) {
 
 async function fetchResponse(userMessage) {
   try {
-    const response = await fetch('/.netlify/functions/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: userMessage }),
-    });
-    const data = await response.json();
-    console.log("AI odgovor:", data);
-    return data.reply || "Nimam odgovora.";
-  } catch (err) {
-    console.error("Napaka pri fetchu:", err);
-    return "Napaka pri povezavi z Valoranom.";
-  }
-}
+
 
 
 
