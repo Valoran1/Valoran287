@@ -2,7 +2,16 @@ const chatLog = document.getElementById('chat-log');
 const chatForm = document.getElementById('chat-form');
 const userInput = document.getElementById('user-input');
 
-chatForm.addEventListener('submit', async (e) => {
+// Pošlji s klikom ali Enter (brez Shift)
+chatForm.addEventListener('submit', handleSubmit);
+userInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    chatForm.requestSubmit();
+  }
+});
+
+async function handleSubmit(e) {
   e.preventDefault();
   const input = userInput.value.trim();
   if (!input) return;
@@ -11,7 +20,7 @@ chatForm.addEventListener('submit', async (e) => {
   userInput.value = '';
   const botMessage = await fetchResponse(input);
   await typeMessage('bot', botMessage);
-});
+}
 
 function appendMessage(role, content) {
   const messageEl = document.createElement('div');
@@ -40,10 +49,13 @@ async function fetchResponse(userMessage) {
       body: JSON.stringify({ message: userMessage }),
     });
     const data = await response.json();
+    console.log("AI odgovor:", data);
     return data.reply || "Nimam odgovora.";
   } catch (err) {
+    console.error("Napaka pri fetchu:", err);
     return "Napaka pri povezavi z Valoranom.";
   }
 }
+
 
 
