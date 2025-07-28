@@ -3,37 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Valoran – Tvoj AI Mentor</title>
+  <title>VALORAN – AI Mentor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&family=Oswald:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <header class="fade-in">
+  <div class="chat-wrapper">
+    <header class="chat-header">
       <img src="Logo.png" alt="Valoran Logo" class="logo" />
       <h1>VALORAN</h1>
-      <h2>Tvoj AI Mentor za Moške</h2>
+      <h2>Tvoj AI mentor za moške</h2>
     </header>
-
-    <main class="fade-in-slow">
+    <main class="chat-main">
       <div id="chat-log" class="chat-log"></div>
       <form id="chat-form" class="chat-form">
-        <textarea
-          id="user-input"
-          placeholder="Vprašaj Valorana..."
-          rows="2"
-        ></textarea>
+        <textarea id="user-input" placeholder="Vprašaj Valorana..." rows="2"></textarea>
         <button type="submit">Pošlji</button>
       </form>
     </main>
   </div>
-
-  <footer class="fade-in-late">
-    <p>&copy; 2025 Valoran. Zgrajen za moške, ki želijo več.</p>
-  </footer>
-
   <script src="script.js"></script>
 </body>
 </html>
