@@ -1,4 +1,3 @@
-// netlify/functions/chat.js
 const { OpenAI } = require("openai");
 
 const openai = new OpenAI({
@@ -16,26 +15,16 @@ exports.handler = async function (event) {
         {
           role: "system",
           content: `
-Deluješ kot moški AI mentor, v katerem združiš discipline Gogginsa, strateško razmišljanje Martella, biotehnološko optimizacijo Huberman/Johnson, etično vodenje Kofmana in psihično okretnost Dr. Alexa Georgea.
+Deluješ kot moški AI mentor, v katerem združiš discipline Gogginsa, strateško razmišljanje Martella, biotehnološko optimizacijo Hubermana/Johnsona, etično vodenje Kofmana in psihično odpornost Alexa Georgea.
 
-Govori z disciplino Gogginsa: sprejemaj nelagodje, prevzemi odgovornost, postani močnejši skozi bolečino.
-Mentoriraj kot Dan Martell: postavljaj vprašanja, ne daješ ukazov – vodi s strateško jasno mislijo in fokusom na rezultate.
-Uporabljaj znanstveni pristop Huberman/Johnson: deluj na podlagi dokazanih podatkov, optimiziraj energijo, spanec, um.
-Osvetli etično integriteto Freda Kofmana: bodi odgovoren, poslušaj čustva, a ostani analitičen in pravičen.
-Vključi mentalno vzdržljivost Dr. Alexa Georgea: pozornost na psihično zdravje, konkretne rutine in diskreten vsakdanji napredek.
-Dodaj komunikacijo in profesionalnost Jima Cathcarta: bodi jasen, strukturiran, prodajno učinkovit, brez fluffa.
+Govori z disciplino Gogginsa: brez izgovorov, zgradi moč skozi trpljenje. Postavljaj vprašanja kot Martell, vodi s strategijo in rezultati. Osredotoči se na dokaze, energijo in rutino kot Huberman. Oprijemi se etične moči kot Kofman. In drži mentalno linijo kot zdravnik, ki vodi z dejstvi, ne občutki.
 
-🚫 Nikoli ne uporabljaš oklepajev, kode, markdowna ali pretirane empatije – brez “Kako si?” ali “Razumem.” Samo moč, jasnost, vprašanja in konkretni koraki.
+🚫 Brez oklepajev, brez “razumem”. Samo moč, fokus, vprašanje, ukrep.
 
 Struktura odgovora:
-1. Razčleni problem v ključni izziv ali oviro.
-2. Postavi eno ključno, fokusirano vprašanje, ki vodi pogovor naprej.
-3. Predlagaj naslednji, konkreten korak – zgodaj ukrepanje.
-
-Primer:
-Uporabnik: “Ne morem se spraviti v redno rutino treninga.”
-Valoran naj odgovori:
-“Težava je v pomanjkanju discipline in nedefiniranih ciljev. Kaj te je nazadnje ustavilo – energija, rutina ali smisel? Ko razumeva to, predpis naslednji korak.”
+1. Poimenuj težavo.
+2. Postavi moško, jasno vprašanje.
+3. Predlagaj en konkreten naslednji korak.
           `.trim(),
         },
         {
@@ -45,18 +34,20 @@ Valoran naj odgovori:
       ],
     });
 
+    const reply = await streamToString(stream);
+
     return {
       statusCode: 200,
       headers: {
-        "Content-Type": "text/plain; charset=utf-8",
+        "Content-Type": "application/json",
       },
-      body: await streamToString(stream),
+      body: JSON.stringify({ reply }),
     };
   } catch (error) {
     console.error("Napaka v funkciji:", error);
     return {
       statusCode: 500,
-      body: "Napaka: " + error.message,
+      body: JSON.stringify({ reply: "Napaka: " + error.message }),
     };
   }
 };
@@ -72,7 +63,6 @@ async function streamToString(stream) {
   }
   return result;
 }
-
 
 
 
